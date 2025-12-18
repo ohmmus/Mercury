@@ -23,5 +23,9 @@ public class Bullet : MonoBehaviour
         {
             ObjectPool.Instance.ReturnObjectToPool(gameObject);
         }
+        else if (collision.collider.tag.Equals("Enemy"))
+        {
+            ObjectPool.Instance.ReturnObjectToPool(gameObject);
+        }
     }
 }
