@@ -14,7 +14,7 @@ public class Spawner : MonoBehaviour
     private float _numEnemiesPerSpawn = 1.0f;
 
     [SerializeField]
-    private Transform _spawnPoint;
+    private Collider _spawnPoint;
 
     void Start()
     {
@@ -26,17 +26,24 @@ public class Spawner : MonoBehaviour
 
         if (_spawnTimer <= 0.0f)
         {
-            for (int i = 0; i < _numEnemiesPerSpawn; i++)
-            {
-                GameObject enemy = ObjectPool.Instance.GetObjectFromPool(_enemyPrefab);
-                // TODO: Add random position range from spawner transform.
-                enemy.transform.position = _spawnPoint.position;
-                enemy.transform.rotation = _spawnPoint.rotation;
-            }
-
+            Spawn();
             _spawnTimer = _spawnRateSeconds;
         }
     }
 
+    void Spawn()
+    {
+        for (int i = 0; i < _numEnemiesPerSpawn; i++)
+        {
+            GameObject enemy = ObjectPool.Instance.GetPooledObject(_enemyPrefab);
+            // TODO: Add random position range from spawner transform.
+            Rigidbody test = enemy.GetComponent<Rigidbody>();
+
+            enemy.transform.position = new Vector3(Random.Range(_spawnPoint.bounds.min.x, _spawnPoint.bounds.max.x),
+                                                                _spawnPoint.bounds.center.y,
+                                                   Random.Range(_spawnPoint.bounds.min.z, _spawnPoint.bounds.max.z));
+            enemy.transform.rotation = Quaternion.identity;
+        }
+    }
 
 }

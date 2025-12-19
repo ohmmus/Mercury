@@ -1,6 +1,6 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
 
     void Death()
     {
-        
+        SceneManager.LoadScene("GameOver");
     }
 
     // Update is called once per frame

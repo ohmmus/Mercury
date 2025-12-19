@@ -9,13 +9,12 @@ public class ObjectPool : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;    
+        Instance = this;
     }
 
     void Start()
     {
         _pooledObjectsByPrefab = new Dictionary<GameObject, List<GameObject>>();
-
     }
 
     public GameObject GetPooledObject(GameObject prefab)
@@ -24,7 +23,7 @@ public class ObjectPool : MonoBehaviour
 
         if (_pooledObjectsByPrefab.TryGetValue(prefab, out listOfUnusedObjects))
         {
-            foreach (GameObject obj in listOfUnusedObjects) 
+            foreach (GameObject obj in listOfUnusedObjects)
             {
                 if (!obj.activeInHierarchy)
                 {
