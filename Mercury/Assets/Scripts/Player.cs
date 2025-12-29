@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject _playerPrefab = null;
+
     Transform _transformRef;
 
     [SerializeField]
@@ -15,18 +19,21 @@ public class Player : MonoBehaviour
     [SerializeField]
     private GameObject _bulletPrefab;
 
-    [SerializeField]
-    private int _maxHealth = 10;
-
-    private int _currentHealth = 10;
-
     private float _shotTimer = 0.0f;
+
+    private Stack<Player> _SpawnedPlayers;
+
+    public int PlayerCount
+    {
+        get { return _SpawnedPlayers.Count; }
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         _transformRef = transform;
         _shotTimer = _secondsPerShot;
+        
     }
 
     void OnEnable()
@@ -36,7 +43,7 @@ public class Player : MonoBehaviour
 
     void Spawn()
     {
-        _currentHealth = _maxHealth;    
+      
     }
 
     void Death()
@@ -71,16 +78,67 @@ public class Player : MonoBehaviour
        bullet.transform.position = _transformRef.position;
     }
 
+    void SetNumberOfPlayers(int numPlayers)
+    {
+        while (PlayerCount != numPlayers)
+        {
+            if (numPlayers < PlayerCount)
+            {
+                RemoveAPlayer();
+            }
+            else
+            {
+                AddAPlayer();
+            }
+        }
+    }
+
+    void AddAPlayer()
+    {
+        GameObject newPlayer = ObjectPool.Instance.GetPooledObject(_playerPrefab);
+        _SpawnedPlayers.Push(newPlayer.GetComponent<Player>()); 
+    }
+
+    void RemoveAPlayer(bool allowDeath = false)
+    {
+        Player killedPlayer = null;
+
+        if (allowDeath && PlayerCount == 0)
+        {
+            Death();
+        }
+
+        if (_SpawnedPlayers.TryPop(out killedPlayer))
+        {
+            ObjectPool.Instance.ReturnObjectToPool(killedPlayer.gameObject);
+        }
+    }
+
+    public void ApplyStatus(Gate.StatusEffect statusEffect)
+    {
+        switch(statusEffect.statusOperation)
+        {
+            case Gate.Operation.Add:      SetNumberOfPlayers(PlayerCount + statusEffect.count); break;
+            case Gate.Operation.Subtract: SetNumberOfPlayers(PlayerCount - statusEffect.count);  break;
+            case Gate.Operation.Multiply: SetNumberOfPlayers(PlayerCount * statusEffect.count);  break;
+            case Gate.Operation.Divide:   SetNumberOfPlayers(PlayerCount / statusEffect.count);  break;
+        }
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.tag.Equals("Enemy"))
         {
-            _currentHealth -= 1;
-
-            if (_currentHealth <= 0)
+            RemoveAPlayer(allowDeath: true);
+        }
+        else if (collision.collider.tag.Equals("Gate"))
+        {
+            Gate colliderGate = collision.collider.gameObject.GetComponent<Gate>();
+            if (colliderGate != null)
             {
-               Death(); 
+                ApplyStatus(colliderGate.statusEffect);
             }
+
         }
     }
 }
