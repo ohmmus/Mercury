@@ -523,6 +523,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6639f0e0ab757a4eb2dc343e547cdbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Gate
+  _statusText: {fileID: 322402919869048502}
   _moveSpeed: 10
 --- !u!65 &1742304926577853384
 BoxCollider:

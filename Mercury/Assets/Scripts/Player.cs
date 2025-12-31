@@ -21,7 +21,7 @@ public class Player : MonoBehaviour
 
     private float _shotTimer = 0.0f;
 
-    private Stack<Player> _SpawnedPlayers;
+    private Stack<Player> _SpawnedPlayers = new Stack<Player>();
 
     public int PlayerCount
     {
@@ -116,6 +116,11 @@ public class Player : MonoBehaviour
 
     public void ApplyStatus(Gate.StatusEffect statusEffect)
     {
+
+        if (statusEffect == null)
+        {
+            Debug.LogError("Player: ApplyStatus called with null statusEffect.");
+        }
         switch(statusEffect.statusOperation)
         {
             case Gate.Operation.Add:      SetNumberOfPlayers(PlayerCount + statusEffect.count); break;
@@ -130,15 +135,6 @@ public class Player : MonoBehaviour
         if (collision.collider.tag.Equals("Enemy"))
         {
             RemoveAPlayer(allowDeath: true);
-        }
-        else if (collision.collider.tag.Equals("Gate"))
-        {
-            Gate colliderGate = collision.collider.gameObject.GetComponent<Gate>();
-            if (colliderGate != null)
-            {
-                ApplyStatus(colliderGate.statusEffect);
-            }
-
         }
     }
 }

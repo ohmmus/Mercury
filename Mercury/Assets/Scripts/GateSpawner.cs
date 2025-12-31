@@ -42,6 +42,16 @@ public class GateSpawner : MonoBehaviour
                                                                 _spawnPoint.bounds.center.y,
                                                    Random.Range(_spawnPoint.bounds.min.z, _spawnPoint.bounds.max.z));
             spawn.transform.rotation = Quaternion.identity;
+
+            Gate gateComponent = spawn.GetComponent<Gate>();
+            if (gateComponent != null)
+            {
+                gateComponent.OnSpawn();
+            }
+            else
+            {
+                Debug.LogError("GateSpawner: Spawned object does not have Gate component.");
+            }
         }
     }
 

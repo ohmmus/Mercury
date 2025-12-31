@@ -21,11 +21,20 @@ public class Bullet : MonoBehaviour
     {
         if (collision.collider.tag.Equals("Despawn"))
         {
-            ObjectPool.Instance.ReturnObjectToPool(gameObject);
+            ReturnObjectToPool();
         }
         else if (collision.collider.tag.Equals("Enemy"))
         {
-            ObjectPool.Instance.ReturnObjectToPool(gameObject);
+            ReturnObjectToPool();
         }
+        else if (collision.collider.tag.Equals("Gate"))
+        {
+            ReturnObjectToPool();
+        }
+    }
+
+    void ReturnObjectToPool()
+    {
+        ObjectPool.Instance.ReturnObjectToPool(gameObject);
     }
 }

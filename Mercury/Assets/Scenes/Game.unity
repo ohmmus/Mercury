@@ -1464,7 +1464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16388284c4cc1894fbedd5f37a06a725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  _playerPrefab: {fileID: 0}
+  _playerPrefab: {fileID: 3227111681311981077, guid: b92299b99338170408f2e32f0329ac1a, type: 3}
   _moveSpeed: 5
   _secondsPerShot: 0.5
   _bulletPrefab: {fileID: 6715173776079644744, guid: a4e4b9748dc5ee54c9b041de8e06088f, type: 3}
